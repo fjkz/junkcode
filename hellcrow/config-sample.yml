@@ -1,0 +1,26 @@
+line_token: aaaaaaaaaaaaaa
+
+my_info:
+  name: Jhon Do
+  tel: 05099999999
+  email: jhon.do@example.com
+
+site:
+  home_url: https://example.com
+  id: jhon.do@example.com
+  password: aaaaaa
+  nickname: jhon
+
+target:
+  name: alice
+  outer_url: https://example.com/outer
+  inner_url: https://example.com/inner
+  course: 1
+  option: []
+
+my_free_time:
+  earliest_start: "2022-09-30 08:00"
+  latest_start: "2022-09-30 23:30"
+
+job_start: "2022-09-21 15:00:00"
+retry_sec: 10
