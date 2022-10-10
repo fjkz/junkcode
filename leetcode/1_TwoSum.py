@@ -1,10 +1,9 @@
 from bisect import bisect_left
+from collections import Counter
 
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
-        count = {n: 0 for n in nums}
-        for n in nums:
-            count[n] += 1
+        count = Counter(nums)
         for n1 in nums:
             n2 = target - n1
             if n1 == n2 and count[n1] >= 2:
