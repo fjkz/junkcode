@@ -4,6 +4,7 @@ my_info:
   name: Jhon Do
   tel: 05099999999
   email: jhon.do@example.com
+  comment: ""
 
 site:
   home_url: https://example.com

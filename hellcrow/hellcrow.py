@@ -133,6 +133,7 @@ def snipe(page, target, retry_sec):
     page.locator("id=customer_name").fill(my_info["name"])
     page.locator("id=reservation_phone_number").fill(my_info["tel"])
     page.locator("id=mail_pc_sp").fill(my_info["email"])
+    page.locator("id=customer_input_notes").fill(my_info["comment"])
 
     checkbox = page.locator("id=contact_from_check")
     if checkbox.is_visible():
