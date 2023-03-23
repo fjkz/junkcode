@@ -72,7 +72,7 @@ class MinoPosition:
         self.minos = [(cy - y0 + y, cx - x0 + x) for cy, cx in self.minos]
 
     def __repr__(self):
-        return "MinoPosition(" + repr(self.minos) + ")"
+        return f"MinoPosition({repr(self.minos)})"
 
     def __iter__(self):
         return iter(self.minos)
@@ -355,16 +355,19 @@ if __name__ == "__main__":
 
     print("#fit rate")
     for piece, rate in fit_statistics.list_fit_rate():
-        print("{}: {:.3f}".format(piece, rate))
+        print(f"{piece}: {rate:.3f}")
 
     print("\n#reach distribution")
     for depth, rate in search_statistics.reach_distribution():
-        print("{:2d}: {:.4f}".format(depth, rate))
+        print(f"{depth:2d}: {rate:.4f}")
 
     print()
-    print("elapsed time [s]: {:.2f}".format((end_time_ns - start_time_ns) / 10**9))
+    elapsed = (end_time_ns - start_time_ns) / 10**9
+    print(f"elapsed time [s]: {elapsed:.2f}")
     print("total search trial:", search_statistics.total_trial())
-    print("mean fit rate: {:.2f}".format(fit_statistics.mean_fit_rate()))
-    print("mean reached depth: {:.2f}".format(search_statistics.mean_reached_depth()))
+    fit_rate = fit_statistics.mean_fit_rate()
+    print(f"mean fit rate: {fit_rate:.2f}")
+    depth = search_statistics.mean_reached_depth()
+    print(f"mean reached depth: {depth:.2f}")
     print()
     answer.print()
