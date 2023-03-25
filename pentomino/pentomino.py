@@ -88,9 +88,6 @@ class Board:
         nx = len(self.cells[0])
         return (ny, nx)
 
-    def get(self, y, x):
-        return self.cell[y][x]
-
     def is_empty_at(self, y, x):
         ny, nx = self.span()
         return 0 <= y < ny and 0 <= x < nx and self.cells[y][x] is None
