@@ -105,7 +105,46 @@ class Board:
 
     def print(self):
         for row in self.cells:
-            print(" ".join(c if c else "." for c in row))
+            plain_string = " ".join(c if c else "." for c in row)
+            print(color_string(plain_string))
+
+
+def color_string(plain_string):
+    RED = '\033[31m'
+    GREEN = '\033[32m'
+    YELLOW = '\033[33m'
+    BLUE = '\033[34m'
+    MAGENTA = '\033[35m'
+    CYAN = '\033[36m'
+    LIGHT_RED = '\033[91m'
+    LIGHT_GREEN = '\033[92m'
+    LIGHT_YELLOW = '\033[93m'
+    LIGHT_BLUE = '\033[94m'
+    LIGHT_MAGENTA = '\033[95m'
+    LIGHT_CYAN = '\033[96m'
+    RESET = '\033[0m'
+    color_map = {
+        'O': RED,
+        'P': GREEN,
+        'Q': YELLOW,
+        'R': BLUE,
+        'S': MAGENTA,
+        'T': CYAN,
+        'U': LIGHT_RED,
+        'V': LIGHT_GREEN,
+        'W': LIGHT_YELLOW,
+        'X': LIGHT_BLUE,
+        'Y': LIGHT_MAGENTA,
+        'Z': LIGHT_CYAN
+    }
+    colored_string = []
+    for c in plain_string:
+        if c in color_map:
+            code = color_map[c]
+            colored_string.extend([code, c, RESET])
+            continue
+        colored_string .append(c)
+    return ''.join(colored_string)
 
 
 class Piece:
