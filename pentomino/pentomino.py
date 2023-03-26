@@ -172,10 +172,12 @@ class Piece:
         # randomize piece direction
         turn_factors = [i for i in range(0, 8)]
         random.shuffle(turn_factors)
+        cell_indexes = [i for i in range(0, PENTO)]
+        random.shuffle(cell_indexes)
 
         done = set()
         for factor in turn_factors:
-            for center_cell in range(0, PENTO):
+            for center_cell in cell_indexes:
                 position = MinoPosition(self.minos)
                 position.turn_flip(factor)
                 position.move(center_cell, y, x)
