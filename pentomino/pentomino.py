@@ -49,23 +49,27 @@ class MinoPosition:
         self.minos = minos
 
     def turn_flip(self, factor):
-        if factor == 0:
-            pass
-        elif factor == 1:
-            self.minos = [(x, -y) for y, x in self.minos]
-        elif factor == 2:
-            self.minos = [(-y, -x) for y, x in self.minos]
-        elif factor == 3:
-            self.minos = [(-x, y) for y, x in self.minos]
-        elif factor == 4:
-            self.minos = [(y, -x) for y, x in self.minos]
-        elif factor == 5:
-            self.minos = [(-x, -y) for y, x in self.minos]
-        elif factor == 6:
-            self.minos = [(-y, x) for y, x in self.minos]
-        elif factor == 7:
-            self.minos = [(x, y) for y, x in self.minos]
-        self.minos.sort()
+        new_position = []
+        for y, x in self.minos:
+            if factor == 0:
+                ny, nx = y, x
+            elif factor == 1:
+                ny, nx = x, -y
+            elif factor == 2:
+                ny, nx = -y, -x
+            elif factor == 3:
+                ny, nx = -x, y
+            elif factor == 4:
+                ny, nx = y, -x
+            elif factor == 5:
+                ny, nx = -x, -y
+            elif factor == 6:
+                ny, nx = -y, x
+            elif factor == 7:
+                ny, nx = x, y
+            new_position.append((ny, nx))
+        new_position.sort()
+        self.minos = new_position
 
     def move(self, basecell, y, x):
         y0, x0 = self.minos[basecell]
