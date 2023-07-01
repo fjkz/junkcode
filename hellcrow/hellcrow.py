@@ -51,7 +51,7 @@ def find_free_slot(html):
     table = soup.select_one("#chart > div > table > tbody")
 
     if not table:
-        log.warn("schedule table is not found")
+        log.warning("schedule table is not found")
         return []
 
     free_slots = {}
