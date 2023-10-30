@@ -144,3 +144,66 @@ for i in range(-7, 8):
     rate_i = sum(pi.values())
     rate_p = sum(p for h, p in pi.items() if point(h.player) > point(h.banker))
     print(i, "%.9f" % (rate_p/rate_i))
+
+print("\nCard Rate - 1")
+def count_card(hands):
+    card_rate = [0.0] * 10
+    for cards, percentage in hands:
+        for card in cards:
+            card_rate[card] += percentage
+    # normalize
+    total = sum(card_rate)
+    for i, r in enumerate(card_rate):
+        if i == 0:
+            card_rate[i] = r/total*13/4 - 1
+            continue
+        card_rate[i] = r/total*13 - 1
+    return card_rate
+
+
+hands_player_win = [
+    ([card for card in h.player + h.banker if card is not None], p)
+    for h, p in p_hand.items()
+    if point(h.player) > point(h.banker)
+]
+card_count_player_win = count_card(hands_player_win)
+
+hands_banker_win = [
+    ([card for card in h.player + h.banker if card is not None], p)
+    for h, p in p_hand.items()
+    if point(h.player) < point(h.banker)
+]
+card_count_banker_win = count_card(hands_banker_win)
+
+hands_banker_win6 = [
+    ([card for card in h.player + h.banker if card is not None], p)
+    for h, p in p_hand.items()
+    if point(h.player) < point(h.banker) and point(h.banker) == 6
+]
+card_count_banker_win6 = count_card(hands_banker_win6)
+
+hands_banker_win_not6 = [
+    ([card for card in h.player + h.banker if card is not None], p)
+    for h, p in p_hand.items()
+    if point(h.player) < point(h.banker) and point(h.banker) != 6
+]
+card_count_banker_win_not6 = count_card(hands_banker_win_not6)
+
+hands_tie = [
+    ([card for card in h.player + h.banker if card is not None], p)
+    for h, p in p_hand.items()
+    if point(h.player) == point(h.banker)
+]
+card_count_tie = count_card(hands_tie)
+
+print("","player","banker", "banker6", "banker!6", "tie", "pl-bn", "bn!6-pl", sep="\t")
+for i, (p, b, b6, bn6, t) in enumerate(zip(
+    card_count_player_win,
+    card_count_banker_win,
+    card_count_banker_win6,
+    card_count_banker_win_not6,
+    card_count_tie
+)):
+    print(i,
+        "% .4f"%p, "% .4f"%b, "% .4f"%b6, "% .4f"%bn6, "% .4f"%t, "% .4f"%(p-b), "% .4f"%(bn6-p),
+        sep="\t")
