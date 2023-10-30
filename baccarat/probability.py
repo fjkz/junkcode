@@ -86,16 +86,16 @@ tie = sum(p for h, p in p_hand.items() if point(h.player) == point(h.banker))
 print("Tie %.9f" % tie)
 
 print()
-banker_win6 = sum(p for h, p in p_hand.items() if point(h.player) < point(h.banker) and point(h.banker) == 6)
-print("Banker w/ 6 %.9f" % banker_win6)
-banker_win_no6 = sum(p for h, p in p_hand.items() if point(h.player) < point(h.banker) and point(h.banker) != 6)
-print("Banker w/ non-6 %.9f" % banker_win_no6)
+super6 = sum(p for h, p in p_hand.items() if point(h.player) < point(h.banker) and point(h.banker) == 6)
+print("Super6 %.9f" % super6)
+non6 = sum(p for h, p in p_hand.items() if point(h.player) < point(h.banker) and point(h.banker) != 6)
+print("Non6 %.9f" % non6)
 
 print("\nHouse Edge")
 no_tie = 1 - tie
 print("Player %.9f" % (1 - 2 * player_win / no_tie))
 print("Banker %.9f" % (1 - 1.95 * banker_win / no_tie))
-print("Banker (no commission) %.9f" % (1 - (1.5 * banker_win6 + 2 * banker_win_no6) / no_tie))
+print("Banker (no commission) %.9f" % (1 - (1.5 * super6 + 2 * non6) / no_tie))
 print("Tie %.9f" % (1 - 8 * tie))
 
 print("\nNumber of Cards (Player:Banker)")
@@ -175,19 +175,19 @@ hands_banker_win = [
 ]
 card_count_banker_win = count_card(hands_banker_win)
 
-hands_banker_win6 = [
+hands_super6 = [
     ([card for card in h.player + h.banker if card is not None], p)
     for h, p in p_hand.items()
     if point(h.player) < point(h.banker) and point(h.banker) == 6
 ]
-card_count_banker_win6 = count_card(hands_banker_win6)
+card_count_super6 = count_card(hands_super6)
 
-hands_banker_win_not6 = [
+hands_non6 = [
     ([card for card in h.player + h.banker if card is not None], p)
     for h, p in p_hand.items()
     if point(h.player) < point(h.banker) and point(h.banker) != 6
 ]
-card_count_banker_win_not6 = count_card(hands_banker_win_not6)
+card_count_non6 = count_card(hands_non6)
 
 hands_tie = [
     ([card for card in h.player + h.banker if card is not None], p)
@@ -196,14 +196,14 @@ hands_tie = [
 ]
 card_count_tie = count_card(hands_tie)
 
-print("","player","banker", "banker6", "banker!6", "tie", "pl-bn", "bn!6-pl", sep="\t")
-for i, (p, b, b6, bn6, t) in enumerate(zip(
+print("","player","banker", "super6", "non6", "tie", "pl-bn", "n6-pl", sep="\t")
+for i, (p, b, s6, n6, t) in enumerate(zip(
     card_count_player_win,
     card_count_banker_win,
-    card_count_banker_win6,
-    card_count_banker_win_not6,
+    card_count_super6,
+    card_count_non6,
     card_count_tie
 )):
     print(i,
-        "% .4f"%p, "% .4f"%b, "% .4f"%b6, "% .4f"%bn6, "% .4f"%t, "% .4f"%(p-b), "% .4f"%(bn6-p),
+        "% .4f"%p, "% .4f"%b, "% .4f"%s6, "% .4f"%n6, "% .4f"%t, "% .4f"%(p-b), "% .4f"%(n6-p),
         sep="\t")
