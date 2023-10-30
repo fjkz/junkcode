@@ -85,6 +85,19 @@ print("Banker %.9f" % banker_win)
 tie = sum(p for h, p in p_hand.items() if point(h.player) == point(h.banker))
 print("Tie %.9f" % tie)
 
+print()
+banker_win6 = sum(p for h, p in p_hand.items() if point(h.player) < point(h.banker) and point(h.banker) == 6)
+print("Banker w/ 6 %.9f" % banker_win6)
+banker_win_no6 = sum(p for h, p in p_hand.items() if point(h.player) < point(h.banker) and point(h.banker) != 6)
+print("Banker w/ non-6 %.9f" % banker_win_no6)
+
+print("\nHouse Edge")
+no_tie = 1 - tie
+print("Player %.9f" % (1 - 2 * player_win / no_tie))
+print("Banker %.9f" % (1 - 1.95 * banker_win / no_tie))
+print("Banker (no commission) %.9f" % (1 - (1.5 * banker_win6 + 2 * banker_win_no6) / no_tie))
+print("Tie %.9f" % (1 - 8 * tie))
+
 print("\nNumber of Cards (Player:Banker)")
 print("2:2 %.9f" % sum(p for h, p in p_hand.items() if not hit3rd(h.player) and not hit3rd(h.banker)))
 print("3:2 %.9f" % sum(p for h, p in p_hand.items() if hit3rd(h.player) and not hit3rd(h.banker)))
