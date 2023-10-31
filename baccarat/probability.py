@@ -78,25 +78,25 @@ assert abs(sum(p_hand.values()) - 1) < 0.1**10
 print("Number of hand state", len(p_hand))
 
 print("\nWinner")
-player_win = sum(p for h, p in p_hand.items() if point(h.player) > point(h.banker))
-print("Player %.9f" % player_win)
-banker_win = sum(p for h, p in p_hand.items() if point(h.player) < point(h.banker))
-print("Banker %.9f" % banker_win)
-tie = sum(p for h, p in p_hand.items() if point(h.player) == point(h.banker))
-print("Tie %.9f" % tie)
+player_rate = sum(p for h, p in p_hand.items() if point(h.player) > point(h.banker))
+print("Player %.9f" % player_rate)
+banker_rate = sum(p for h, p in p_hand.items() if point(h.player) < point(h.banker))
+print("Banker %.9f" % banker_rate)
+tie_rate = sum(p for h, p in p_hand.items() if point(h.player) == point(h.banker))
+print("Tie %.9f" % tie_rate)
 
 print()
-super6 = sum(p for h, p in p_hand.items() if point(h.player) < point(h.banker) and point(h.banker) == 6)
-print("Super6 %.9f" % super6)
-non6 = sum(p for h, p in p_hand.items() if point(h.player) < point(h.banker) and point(h.banker) != 6)
-print("Non6 %.9f" % non6)
+super6_rate = sum(p for h, p in p_hand.items() if point(h.player) < point(h.banker) and point(h.banker) == 6)
+print("Super6 %.9f" % super6_rate)
+non6_rate = sum(p for h, p in p_hand.items() if point(h.player) < point(h.banker) and point(h.banker) != 6)
+print("Non6 %.9f" % non6_rate)
 
 print("\nHouse Edge")
-no_tie = 1 - tie
-print("Player %.9f" % (1 - 2 * player_win / no_tie))
-print("Banker %.9f" % (1 - 1.95 * banker_win / no_tie))
-print("Banker (no commission) %.9f" % (1 - (1.5 * super6 + 2 * non6) / no_tie))
-print("Tie %.9f" % (1 - 8 * tie))
+notie_rate = 1 - tie_rate
+print("Player %.9f" % (1 - 2 * player_rate / notie_rate))
+print("Banker %.9f" % (1 - 1.95 * banker_rate / notie_rate))
+print("Banker (no commission) %.9f" % (1 - (1.5 * super6_rate + 2 * non6_rate) / notie_rate))
+print("Tie %.9f" % (1 - 8 * tie_rate))
 
 print("\nNumber of Cards (Player:Banker)")
 print("2:2 %.9f" % sum(p for h, p in p_hand.items() if not hit3rd(h.player) and not hit3rd(h.banker)))
@@ -160,7 +160,10 @@ def count_card(hands):
         card_rate[i] = r/total*13 - 1
     return card_rate
 
-
+hands_all = [
+    ([card for card in h.player + h.banker if card is not None], p)
+    for h, p in p_hand.items()
+]
 hands_player_win = [
     ([card for card in h.player + h.banker if card is not None], p)
     for h, p in p_hand.items()
@@ -204,6 +207,66 @@ for i, (p, b, s6, n6, t) in enumerate(zip(
     card_count_non6,
     card_count_tie
 )):
+    f = "% .3f"
     print(i,
-        "% .4f"%p, "% .4f"%b, "% .4f"%s6, "% .4f"%n6, "% .4f"%t, "% .4f"%(p-b), "% .4f"%(n6-p),
+        f % p, f % b, f % s6, f % n6, f % t, f % (p-b), f % (n6-p),
         sep="\t")
+
+print("\nWinning Rate under Deck without i-Card")
+print("", "player", "banker", "super6", "non6", "tie", "edg_p", "edg_b", "edg_bnc", sep="\t")
+for i in range(10):
+    # woi: without i-card
+    all_woi = sum(p for hand, p in hands_all if i not in hand)
+    player_rate_woi = sum(p for hand, p in hands_player_win if i not in hand)/all_woi
+    banker_rate_woi = sum(p for hand, p in hands_banker_win if i not in hand)/all_woi
+    super6_rate_woi = sum(p for hand, p in hands_super6 if i not in hand)/all_woi
+    non6_rate_woi = sum(p for hand, p in hands_non6 if i not in hand)/all_woi
+    tie_rate_woi = sum(p for hand, p in hands_tie if i not in hand)/all_woi
+
+    p = player_rate_woi/player_rate - 1
+    b = banker_rate_woi/banker_rate - 1
+    s6 = super6_rate_woi/super6_rate - 1
+    n6 = non6_rate_woi/non6_rate - 1
+    t = tie_rate_woi/tie_rate - 1
+
+    notie_rate_woi = 1 - tie_rate_woi
+    edge_player = 1 - (2 * player_rate_woi) / notie_rate_woi
+    edge_banker = 1 - (1.95 * banker_rate_woi) / notie_rate_woi
+    edge_banker_nc = 1 - (1.5 * super6_rate_woi + 2 * non6_rate_woi) / notie_rate_woi
+
+    f = "% .3f"
+    g = "% .3f"
+    print(
+        i,
+        f % p, f % b, f % s6, f % n6, f % t,
+        g % edge_player, g % edge_banker, g % edge_banker_nc,
+        sep="\t"
+    )
+
+last5 = [5,6,7,8,9]
+all_woi = sum(p for hand, p in hands_all if all(i not in hand for i in last5))
+player_rate_woi = sum(p for hand, p in hands_player_win if all(i not in hand for i in last5))/all_woi
+banker_rate_woi = sum(p for hand, p in hands_banker_win if all(i not in hand for i in last5))/all_woi
+super6_rate_woi = sum(p for hand, p in hands_super6 if all(i not in hand for i in last5))/all_woi
+non6_rate_woi = sum(p for hand, p in hands_non6 if all(i not in hand for i in last5))/all_woi
+tie_rate_woi = sum(p for hand, p in hands_tie if all(i not in hand for i in last5))/all_woi
+
+p = player_rate_woi/player_rate - 1
+b = banker_rate_woi/banker_rate - 1
+s6 = super6_rate_woi/super6_rate - 1
+n6 = non6_rate_woi/non6_rate - 1
+t = tie_rate_woi/tie_rate - 1
+
+notie_rate_woi = 1 - tie_rate_woi
+edge_player = 1 - (2 * player_rate_woi) / notie_rate_woi
+edge_banker = 1 - (1.95 * banker_rate_woi) / notie_rate_woi
+edge_banker_nc = 1 - (1.5 * super6_rate_woi + 2 * non6_rate_woi) / notie_rate_woi
+
+f = "% .3f"
+g = "% .3f"
+print(
+    "5-9",
+    f % p, f % b, f % s6, f % n6, f % t,
+    g % edge_player, g % edge_banker, g % edge_banker_nc,
+    sep="\t"
+)
