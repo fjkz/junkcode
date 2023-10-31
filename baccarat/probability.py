@@ -150,7 +150,7 @@ def count_card(hands):
     card_rate = [0.0] * 10
     for cards, percentage in hands:
         for card in cards:
-            card_rate[card] += percentage
+            card_rate[card] += percentage / len(cards)
     # normalize
     total = sum(card_rate)
     for i, r in enumerate(card_rate):
