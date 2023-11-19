@@ -28,41 +28,45 @@ def p_cards(*cards):
         deck[c] -= 1
     return p
 
-# probability where player and banker have the hands
-p_hand = dict()
+def probability_of_hand(p_cards):
+    # probability where player and banker have the hands
+    # under the distribution of p_cards
+    p_hand = dict()
 
-# For all first two pairs
-for p1, p2, b1, b2 in product(list(range(10)), repeat=4):
+    # For all first two pairs
+    for p1, p2, b1, b2 in product(list(range(10)), repeat=4):
 
-    # total of the first two cards
-    p = (p1 + p2) % 10
-    b = (b1 + b2) % 10
+        # total of the first two cards
+        p = (p1 + p2) % 10
+        b = (b1 + b2) % 10
 
-    # finish at the first two draw
-    if p >= 8 or b >= 8 or (6 <= p <= 7 and 6 <= b <= 7):
-        hand = Hand(player=(p1,p2,None), banker=(b1,b2,None))
-        p_hand[hand] = p_cards(p1,p2,b1,b2)
-        continue
+        # finish at the first two draw
+        if p >= 8 or b >= 8 or (6 <= p <= 7 and 6 <= b <= 7):
+            hand = Hand(player=(p1,p2,None), banker=(b1,b2,None))
+            p_hand[hand] = p_cards(p1,p2,b1,b2)
+            continue
 
-    # player hits third card
-    if p <= 5:
-        for p3 in range(10):
-            # judge if banker shall hit the next card along the table
-            if HIT_TABLE[b][p3]:
-                for b3 in range(10):
-                    hand = Hand(player=(p1,p2,p3), banker=(b1,b2,b3))
-                    p_hand[hand] = p_cards(p1,p2,p3,b1,b2,b3)
-                continue
+        # player hits third card
+        if p <= 5:
+            for p3 in range(10):
+                # judge if banker shall hit the next card along the table
+                if HIT_TABLE[b][p3]:
+                    for b3 in range(10):
+                        hand = Hand(player=(p1,p2,p3), banker=(b1,b2,b3))
+                        p_hand[hand] = p_cards(p1,p2,p3,b1,b2,b3)
+                    continue
 
-            # banker doesn't hit third card
-            hand = Hand(player=(p1,p2,p3), banker=(b1,b2,None))
-            p_hand[hand] = p_hand[hand] = p_cards(p1,p2,p3,b1,b2)
-        continue
+                # banker doesn't hit third card
+                hand = Hand(player=(p1,p2,p3), banker=(b1,b2,None))
+                p_hand[hand] = p_hand[hand] = p_cards(p1,p2,p3,b1,b2)
+            continue
 
-    # only banker hits third card
-    for b3 in range(10):
-        hand = Hand(player=(p1,p2,None), banker=(b1,b2,b3))
-        p_hand[hand] = p_cards(p1,p2,b1,b2,b3)
+        # only banker hits third card
+        for b3 in range(10):
+            hand = Hand(player=(p1,p2,None), banker=(b1,b2,b3))
+            p_hand[hand] = p_cards(p1,p2,b1,b2,b3)
+
+    return p_hand
 
 def point(hand):
     return sum(card for card in hand if card) % 10
@@ -73,6 +77,7 @@ def initial(hand):
 def hit3rd(hand):
     return hand[2] is not None
 
+p_hand = probability_of_hand(p_cards)
 assert abs(sum(p_hand.values()) - 1) < 0.1**10
 
 print("Number of hand state", len(p_hand))
