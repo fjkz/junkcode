@@ -1,5 +1,6 @@
 from collections import namedtuple
 from itertools import product
+from functools import reduce
 
 Hand = namedtuple('Hand', ["player", "banker"])
 
@@ -275,3 +276,43 @@ print(
     g % edge_player, g % edge_banker, g % edge_banker_nc,
     sep="\t"
 )
+
+
+print("\nSensitivity to i-Card")
+for bias_card in range(0, 10):
+    print(f"\nWinning rate under {bias_card}-card bias condition")
+    print("bias", "player", "banker", "super6", "tie", "edg_p", "edg_b", "edg_bnc", sep="\t")
+    cases = [round(i * 0.1, 1) for i in range(-10, 11, 5)]
+    for bias_rate in cases:
+
+        def p_cards_bias(*cards):
+            """Probability where given cards are hit."""
+            num_card = [4] + [1 for i in range(1, 10)]
+            num_card[bias_card] += bias_rate
+            total = sum(num_card)
+            p = [n / total for n in num_card]
+            return reduce(lambda x, y: x*y, [p[c] for c in cards])
+
+        p_hand_bias = probability_of_hand(p_cards_bias)
+
+        # each rate
+        p = sum(p for h, p in p_hand_bias.items() if point(h.player) > point(h.banker))
+        b = sum(p for h, p in p_hand_bias.items() if point(h.player) < point(h.banker))
+        t = sum(p for h, p in p_hand_bias.items() if point(h.player) == point(h.banker))
+        s6 = sum(p for h, p in p_hand_bias.items() if point(h.player) < point(h.banker) and point(h.banker) == 6)
+        n6 = sum(p for h, p in p_hand_bias.items() if point(h.player) < point(h.banker) and point(h.banker) != 6)
+        nt = 1 - t
+
+        # edge
+        ep = 1 - 2 * p / nt
+        eb = 1 - 1.95 * b / nt
+        ebnc = 1 - (1.5 * s6 + 2 * n6) / nt
+
+        f = "%.4f"
+        g = "%.4f"
+        print(
+            "% .1f" % bias_rate,
+            f % p, f % b, f % s6, f % n6, f % t,
+            g % ep, g % eb, g % ebnc,
+            sep="\t"
+        )
