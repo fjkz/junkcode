@@ -288,7 +288,7 @@ for bias_card in range(0, 10):
         def p_cards_bias(*cards):
             """Probability where given cards are hit."""
             num_card = [4] + [1 for i in range(1, 10)]
-            num_card[bias_card] += bias_rate
+            num_card[bias_card] *= (1 + bias_rate)
             total = sum(num_card)
             p = [n / total for n in num_card]
             return reduce(lambda x, y: x*y, [p[c] for c in cards])
@@ -326,7 +326,7 @@ for bias_rate in [-0.5, 0.5]:
         def p_cards_bias(*cards):
             """Probability where given cards are hit."""
             num_card = [4] + [1 for i in range(1, 10)]
-            num_card[bias_card] += bias_rate
+            num_card[bias_card] *= (1 + bias_rate)
             total = sum(num_card)
             p = [n / total for n in num_card]
             return reduce(lambda x, y: x*y, [p[c] for c in cards])
