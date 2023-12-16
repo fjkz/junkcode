@@ -312,7 +312,7 @@ for bias_card in range(0, 10):
         g = "%.4f"
         print(
             "% .1f" % bias_rate,
-            f % p, f % b, f % s6, f % n6, f % t,
+            f % p, f % b, f % s6, f % t,
             g % ep, g % eb, g % ebnc,
             sep="\t"
         )
