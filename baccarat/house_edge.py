@@ -169,5 +169,28 @@ def house_edge_under_icards_are_hit_from_deck():
                 sep="\t"
             )
 
+def house_edge_change_when_a_card_is_hit():
+    p_hand0 = probability_of_hand(deck8)
+    player0 = player_edge(p_hand0)
+    banker0 = banker_edge(p_hand0)
+    banker_nc0 = banker_nocomission_edge(p_hand0)
+
+    print("\nHouse edge change when a i-card is hit from deck")
+    print("card\tplayer\tbanker\tbanker_nc")
+    for card in range(0, 10):
+        deck1 = copy(deck8)
+        deck1[card] -= 1
+        p_hand1 = probability_of_hand(deck1)
+        player1 = player_edge(p_hand1)
+        banker1 = banker_edge(p_hand1)
+        banker_nc1 = banker_nocomission_edge(p_hand1)
+        g = "%.8f"
+        print(
+            card,
+            g % (player1 - player0), g % (banker1 - banker0), g % (banker_nc1 - banker_nc0),
+            sep="\t"
+        )
+
 #house_edge_under_banker_cards_bias()
-house_edge_under_icards_are_hit_from_deck()
+#house_edge_under_icards_are_hit_from_deck()
+house_edge_change_when_a_card_is_hit()
