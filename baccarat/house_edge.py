@@ -115,39 +115,59 @@ print("Tie\t%.9f" % (1 - 8 * tie_rate(p_hand)))
 print("Super6\t%.9f" % (1 - 15 * super6_rate(p_hand)))
 
 BANKER_CARDS = {5,6,7,8,9}
-decks_card_bias = []
-for i in range(0, 4 * NDECK): # 4 is number of suits of card ♥♠♣♦
-    deck = [None] * 10
-    for c in range(10):
-        if c in BANKER_CARDS:
-            deck[c] = i
-        elif c == 0:
-            deck[c] = 4 * 4 * NDECK
-        else:
-            deck[c] = 4 * NDECK
-    decks_card_bias.append(deck)
-decks_card_bias.append(deck8)
-for i in range(1, 4 * NDECK + 1):
-    deck = [None] * 10
-    for c in range(10):
-        if c in BANKER_CARDS:
-            deck[c] = 4 * NDECK
-        elif c == 0:
-            deck[c] = 4 * (4 * NDECK - i)
-        else:
-            deck[c] = 4 * NDECK - i
-    decks_card_bias.append(deck)
 
+def house_edge_under_banker_cards_bias():
+    print("\nHouse edge under [5..9] cards bias condition")
+    print("\nrate\tplayer\tbanker\tbanker_nc")
+    decks_card_bias = []
+    for i in range(0, 4 * NDECK): # 4 is number of suits of card ♥♠♣♦
+        deck = [None] * 10
+        for c in range(10):
+            if c in BANKER_CARDS:
+                deck[c] = i
+            elif c == 0:
+                deck[c] = 4 * 4 * NDECK
+            else:
+                deck[c] = 4 * NDECK
+        decks_card_bias.append(deck)
+    decks_card_bias.append(deck8)
+    for i in range(1, 4 * NDECK + 1):
+        deck = [None] * 10
+        for c in range(10):
+            if c in BANKER_CARDS:
+                deck[c] = 4 * NDECK
+            elif c == 0:
+                deck[c] = 4 * (4 * NDECK - i)
+            else:
+                deck[c] = 4 * NDECK - i
+        decks_card_bias.append(deck)
 
-print("\nHouse edge under [5..9] cards bias condition")
-print("\nrate\tplayer\tbanker\tbanker_nc")
-for deck in decks_card_bias:
-    #print(deck)
-    rate = sum(n for card, n in enumerate(deck) if card in BANKER_CARDS) / sum(deck)
-    pp = probability_of_hand(deck)
-    g = "%.4f"
-    print(
-        "%.3f" % rate,
-        g % player_edge(pp), g % banker_edge(pp), g % banker_nocomission_edge(pp),
-        sep="\t"
-    )
+    for deck in decks_card_bias:
+        #print(deck)
+        rate = sum(n for card, n in enumerate(deck) if card in BANKER_CARDS) / sum(deck)
+        pp = probability_of_hand(deck)
+        g = "%.4f"
+        print(
+            "%.3f" % rate,
+            g % player_edge(pp), g % banker_edge(pp), g % banker_nocomission_edge(pp),
+            sep="\t"
+        )
+
+def house_edge_under_icards_are_hit_from_deck():
+    print("\nHouse edge when i-cards are hit from deck")
+    for card in range(0, 10):
+        print(f"\n{card} card")
+        print("hit\tplayer\tbanker\tbanker_nc")
+        for i in range(deck8[card] + 1):
+            deck = copy(deck8)
+            deck[card] -= i
+            pp = probability_of_hand(deck)
+            g = "%.5f"
+            print(
+                i,
+                g % player_edge(pp), g % banker_edge(pp), g % banker_nocomission_edge(pp),
+                sep="\t"
+            )
+
+#house_edge_under_banker_cards_bias()
+house_edge_under_icards_are_hit_from_deck()
