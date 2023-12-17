@@ -429,3 +429,47 @@ for n_positive_cards in [i for i in range(0, 14, 1)]:
         g % ep, g % eb, g % ebnc,
         sep="\t"
     )
+
+print("\nSensitivity of 5,7,8,9 cards to house edge")
+print("card_rate", "edg_p", "edg_b", "edg_bnc", sep="\t")
+positive_cards = [5,7,8,9]
+negative_cards = [0,1,2,3,4,6]
+for n_positive_cards in [i for i in range(0, 14, 1)]:
+    # n_positive_cards = 0: no 5-9 card
+    # n_positive_cards = 13: all 5-9 card
+    rate = n_positive_cards / 13
+
+    def p_cards_bias(*cards):
+        """Probability where given cards are hit."""
+        num_card = [4] + [1 for i in range(1, 10)]
+        for i in range(0, 10):
+            if i in positive_cards:
+                num_card[i] *= n_positive_cards / len(positive_cards)
+            else:
+                num_card[i] *= (13 - n_positive_cards) / (13 - len(positive_cards))
+
+        total = sum(num_card)
+        p = [n / total for n in num_card]
+        return reduce(lambda x, y: x*y, [p[c] for c in cards])
+
+    p_hand_bias = probability_of_hand(p_cards_bias)
+
+    # each rate
+    p = sum(p for h, p in p_hand_bias.items() if point(h.player) > point(h.banker))
+    b = sum(p for h, p in p_hand_bias.items() if point(h.player) < point(h.banker))
+    t = sum(p for h, p in p_hand_bias.items() if point(h.player) == point(h.banker))
+    s6 = sum(p for h, p in p_hand_bias.items() if point(h.player) < point(h.banker) and point(h.banker) == 6)
+    n6 = sum(p for h, p in p_hand_bias.items() if point(h.player) < point(h.banker) and point(h.banker) != 6)
+    nt = 1 - t
+
+    # edge
+    ep = 1 - 2 * p / nt
+    eb = 1 - 1.95 * b / nt
+    ebnc = 1 - (1.5 * s6 + 2 * n6) / nt
+
+    g = "%.4f"
+    print(
+        "%.3f" % rate,
+        g % ep, g % eb, g % ebnc,
+        sep="\t"
+    )
