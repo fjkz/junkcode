@@ -1,0 +1,23 @@
+# MySQL の起動
+
+docker run --name some-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} -d mysql:5.7
+
+mysql -h $(hostname) -P 3306 -uroot -p${MYSQL_ROOT_PASSWORD}
+
+mysql クライアントはローカルにインストールした。
+
+# create database
+
+CREATE DATABASE mysaas DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+
+# create TABLE
+
+ mysql -h $(hostname) -P 3306 -uroot -p${MYSQL_ROOT_PASSWORD} mysaas < schema.sql
+
+# DROP TABLE 
+
+ mysql -h $(hostname) -P 3306 -uroot -p${MYSQL_ROOT_PASSWORD} mysaas < drop_tables.sql
+
+# tbls
+
+tbls doc mysql://root:${MYSQL_ROOT_PASSWORD}@$(hostname):3306/mysaas --force
