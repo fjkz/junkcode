@@ -9,7 +9,7 @@
 
 ```sql
 CREATE TABLE `tax_class` (
-  `id` int(11) unsigned NOT NULL COMMENT 'ID',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `name` varchar(255) COLLATE utf8mb4_bin NOT NULL COMMENT 'è¡¨ç¤ºå',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='ç¨ŽåŒºåˆ†. ç¨ŽçŽ‡å¤‰æ›´ã‚’è€ƒæ…®ã—ã¦ã€ENUM åž‹ã§è¡¨ç¾ã›ãšã«åˆ¥ãƒ†ãƒ¼ãƒ–ãƒ«ã«ã™ã‚‹ã€‚ç¨ŽåŒºåˆ†ã¯ãƒ†ãƒŠãƒ³ãƒˆã«ã‚ˆã‚‰ãªã„ã€‚'
@@ -19,10 +19,10 @@ CREATE TABLE `tax_class` (
 
 ## Columns
 
-| Name | Type | Default | Nullable | Children | Parents | Comment |
-| ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | int(11) unsigned |  | false | [classification_detail](classification_detail.md) |  | ID |
-| name | varchar(255) |  | false |  |  | è¡¨ç¤ºå |
+| Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
+| ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
+| id | int(11) unsigned |  | false | auto_increment | [classification_detail](classification_detail.md) |  | ID |
+| name | varchar(255) |  | false |  |  |  | è¡¨ç¤ºå |
 
 ## Constraints
 

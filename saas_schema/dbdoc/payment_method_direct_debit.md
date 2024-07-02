@@ -9,7 +9,7 @@
 
 ```sql
 CREATE TABLE `payment_method_direct_debit` (
-  `id` int(11) unsigned NOT NULL COMMENT 'ID',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `tenant` int(11) unsigned NOT NULL COMMENT 'ãƒ†ãƒŠãƒ³ãƒˆ',
   `name` varchar(255) COLLATE utf8mb4_bin NOT NULL COMMENT 'è¡¨ç¤ºå',
   PRIMARY KEY (`id`),
@@ -22,11 +22,11 @@ CREATE TABLE `payment_method_direct_debit` (
 
 ## Columns
 
-| Name | Type | Default | Nullable | Children | Parents | Comment |
-| ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | int(11) unsigned |  | false |  |  | ID |
-| tenant | int(11) unsigned |  | false |  | [tenant](tenant.md) | ãƒ†ãƒŠãƒ³ãƒˆ |
-| name | varchar(255) |  | false |  |  | è¡¨ç¤ºå |
+| Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
+| ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
+| id | int(11) unsigned |  | false | auto_increment |  |  | ID |
+| tenant | int(11) unsigned |  | false |  |  | [tenant](tenant.md) | ãƒ†ãƒŠãƒ³ãƒˆ |
+| name | varchar(255) |  | false |  |  |  | è¡¨ç¤ºå |
 
 ## Constraints
 

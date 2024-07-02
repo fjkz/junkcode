@@ -9,7 +9,7 @@
 
 ```sql
 CREATE TABLE `account_category` (
-  `id` int(11) unsigned NOT NULL COMMENT 'ID',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `tenant` int(11) unsigned NOT NULL COMMENT 'ãƒ†ãƒŠãƒ³ãƒˆ',
   `name` varchar(255) COLLATE utf8mb4_bin NOT NULL COMMENT 'è¡¨ç¤ºå',
   `dr_cr_class` enum('debit','credit') COLLATE utf8mb4_bin NOT NULL COMMENT 'å€Ÿæ–¹ or è²¸æ–¹',
@@ -23,12 +23,12 @@ CREATE TABLE `account_category` (
 
 ## Columns
 
-| Name | Type | Default | Nullable | Children | Parents | Comment |
-| ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | int(11) unsigned |  | false | [account_subcategory](account_subcategory.md) [classification_detail](classification_detail.md) |  | ID |
-| tenant | int(11) unsigned |  | false |  | [tenant](tenant.md) | ãƒ†ãƒŠãƒ³ãƒˆ |
-| name | varchar(255) |  | false |  |  | è¡¨ç¤ºå |
-| dr_cr_class | enum('debit','credit') |  | false |  |  | å€Ÿæ–¹ or è²¸æ–¹ |
+| Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
+| ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
+| id | int(11) unsigned |  | false | auto_increment | [account_subcategory](account_subcategory.md) [classification_detail](classification_detail.md) |  | ID |
+| tenant | int(11) unsigned |  | false |  |  | [tenant](tenant.md) | ãƒ†ãƒŠãƒ³ãƒˆ |
+| name | varchar(255) |  | false |  |  |  | è¡¨ç¤ºå |
+| dr_cr_class | enum('debit','credit') |  | false |  |  |  | å€Ÿæ–¹ or è²¸æ–¹ |
 
 ## Constraints
 

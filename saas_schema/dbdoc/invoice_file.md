@@ -9,7 +9,7 @@
 
 ```sql
 CREATE TABLE `invoice_file` (
-  `id` int(11) unsigned NOT NULL COMMENT 'ID',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `tenant` int(11) unsigned NOT NULL COMMENT 'ãƒ†ãƒŠãƒ³ãƒˆ',
   `filename` varchar(2000) COLLATE utf8mb4_bin NOT NULL COMMENT 'ãƒ•ã‚¡ã‚¤ãƒ«å',
   `object_url` varchar(2000) COLLATE utf8mb4_bin NOT NULL COMMENT 'è«‹æ±‚æ›¸ã®ãƒ•ã‚¡ã‚¤ãƒ«ã®URL',
@@ -26,13 +26,13 @@ CREATE TABLE `invoice_file` (
 
 ## Columns
 
-| Name | Type | Default | Nullable | Children | Parents | Comment |
-| ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | int(11) unsigned |  | false |  |  | ID |
-| tenant | int(11) unsigned |  | false |  | [tenant](tenant.md) | ãƒ†ãƒŠãƒ³ãƒˆ |
-| filename | varchar(2000) |  | false |  |  | ãƒ•ã‚¡ã‚¤ãƒ«å |
-| object_url | varchar(2000) |  | false |  |  | è«‹æ±‚æ›¸ã®ãƒ•ã‚¡ã‚¤ãƒ«ã®URL |
-| process_id | int(11) unsigned |  | true |  | [invoice_process](invoice_process.md) | ã“ã®è«‹æ±‚æ›¸ãŒå‡¦ç†ã•ã‚Œã‚‹ãƒ—ãƒ­ã‚»ã‚¹ã®ID. è«‹æ±‚æ›¸ã‚’ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰ã—ã¦ã‹ã‚‰ã€é¸æŠžã—ã¦å‡¦ç†ã™ã‚‹ã¨æŽ¨æ¸¬ã—ã¦ nullable ã«ã™ã‚‹ã€‚ |
+| Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
+| ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
+| id | int(11) unsigned |  | false | auto_increment |  |  | ID |
+| tenant | int(11) unsigned |  | false |  |  | [tenant](tenant.md) | ãƒ†ãƒŠãƒ³ãƒˆ |
+| filename | varchar(2000) |  | false |  |  |  | ãƒ•ã‚¡ã‚¤ãƒ«å |
+| object_url | varchar(2000) |  | false |  |  |  | è«‹æ±‚æ›¸ã®ãƒ•ã‚¡ã‚¤ãƒ«ã®URL |
+| process_id | int(11) unsigned |  | true |  |  | [invoice_process](invoice_process.md) | ã“ã®è«‹æ±‚æ›¸ãŒå‡¦ç†ã•ã‚Œã‚‹ãƒ—ãƒ­ã‚»ã‚¹ã®ID. è«‹æ±‚æ›¸ã‚’ã‚¢ãƒƒãƒ—ãƒ­ãƒ¼ãƒ‰ã—ã¦ã‹ã‚‰ã€é¸æŠžã—ã¦å‡¦ç†ã™ã‚‹ã¨æŽ¨æ¸¬ã—ã¦ nullable ã«ã™ã‚‹ã€‚ |
 
 ## Constraints
 

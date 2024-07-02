@@ -9,7 +9,7 @@
 
 ```sql
 CREATE TABLE `tenant` (
-  `id` int(11) unsigned NOT NULL COMMENT 'ID',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='ãƒ†ãƒŠãƒ³ãƒˆã€‚ä¸»ã‚­ãƒ¼ä»¥å¤–ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã¯ä¸æ˜Žãªã®ã§çœç•¥ã™ã‚‹ã€‚'
 ```
@@ -18,9 +18,9 @@ CREATE TABLE `tenant` (
 
 ## Columns
 
-| Name | Type | Default | Nullable | Children | Parents | Comment |
-| ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | int(11) unsigned |  | false | [account_category](account_category.md) [business_partner](business_partner.md) [cost_center](cost_center.md) [invoice_file](invoice_file.md) [invoice_process](invoice_process.md) [payment_method_bank_transfer](payment_method_bank_transfer.md) [payment_method_credit_card](payment_method_credit_card.md) [payment_method_direct_debit](payment_method_direct_debit.md) [user](user.md) |  | ID |
+| Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
+| ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
+| id | int(11) unsigned |  | false | auto_increment | [account_category](account_category.md) [business_partner](business_partner.md) [cost_center](cost_center.md) [invoice_file](invoice_file.md) [invoice_process](invoice_process.md) [payment_method_bank_transfer](payment_method_bank_transfer.md) [payment_method_credit_card](payment_method_credit_card.md) [payment_method_direct_debit](payment_method_direct_debit.md) [user](user.md) |  | ID |
 
 ## Constraints
 

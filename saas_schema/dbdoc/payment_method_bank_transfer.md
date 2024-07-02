@@ -9,7 +9,7 @@
 
 ```sql
 CREATE TABLE `payment_method_bank_transfer` (
-  `id` int(11) unsigned NOT NULL COMMENT 'ID',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `tenant` int(11) unsigned NOT NULL COMMENT 'ãƒ†ãƒŠãƒ³ãƒˆ',
   `name` char(255) COLLATE utf8mb4_bin NOT NULL COMMENT 'è¡¨ç¤ºå',
   `bank_code` char(4) COLLATE utf8mb4_bin NOT NULL COMMENT 'éŠ€è¡Œã‚³ãƒ¼ãƒ‰ã€‚éŠ€è¡Œã‚³ãƒ¼ãƒ‰ã®ãƒžã‚¹ã‚¿ãŒè¦ã‚‹ãŒçœç•¥ã™ã‚‹ã€‚',
@@ -26,15 +26,15 @@ CREATE TABLE `payment_method_bank_transfer` (
 
 ## Columns
 
-| Name | Type | Default | Nullable | Children | Parents | Comment |
-| ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | int(11) unsigned |  | false |  |  | ID |
-| tenant | int(11) unsigned |  | false |  | [tenant](tenant.md) | ãƒ†ãƒŠãƒ³ãƒˆ |
-| name | char(255) |  | false |  |  | è¡¨ç¤ºå |
-| bank_code | char(4) |  | false |  |  | éŠ€è¡Œã‚³ãƒ¼ãƒ‰ã€‚éŠ€è¡Œã‚³ãƒ¼ãƒ‰ã®ãƒžã‚¹ã‚¿ãŒè¦ã‚‹ãŒçœç•¥ã™ã‚‹ã€‚ |
-| account_type | int(1) |  | false |  |  | å£åº§ç¨®åˆ¥ |
-| branch | char(5) |  | false |  |  | æ”¯åº—ç•ªå· |
-| account_number | char(8) |  | false |  |  | å£åº§ç•ªå· |
+| Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
+| ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
+| id | int(11) unsigned |  | false | auto_increment |  |  | ID |
+| tenant | int(11) unsigned |  | false |  |  | [tenant](tenant.md) | ãƒ†ãƒŠãƒ³ãƒˆ |
+| name | char(255) |  | false |  |  |  | è¡¨ç¤ºå |
+| bank_code | char(4) |  | false |  |  |  | éŠ€è¡Œã‚³ãƒ¼ãƒ‰ã€‚éŠ€è¡Œã‚³ãƒ¼ãƒ‰ã®ãƒžã‚¹ã‚¿ãŒè¦ã‚‹ãŒçœç•¥ã™ã‚‹ã€‚ |
+| account_type | int(1) |  | false |  |  |  | å£åº§ç¨®åˆ¥ |
+| branch | char(5) |  | false |  |  |  | æ”¯åº—ç•ªå· |
+| account_number | char(8) |  | false |  |  |  | å£åº§ç•ªå· |
 
 ## Constraints
 

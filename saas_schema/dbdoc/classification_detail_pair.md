@@ -9,7 +9,7 @@
 
 ```sql
 CREATE TABLE `classification_detail_pair` (
-  `id` int(11) unsigned NOT NULL COMMENT 'ID',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `debit_detail` int(11) unsigned DEFAULT NULL COMMENT 'å€Ÿæ–¹æ˜Žç´°ã€‚è²¸æ–¹æ˜Žç´°ã¨åŒã˜ classification ã«å±žã™ã‚‹ã€‚',
   `credit_detail` int(11) unsigned DEFAULT NULL COMMENT 'è²¸æ–¹æ˜Žç´°ã€‚è²¸æ–¹æ˜Žç´°ã¨åŒã˜ classification ã«å±žã™ã‚‹ã€‚',
   `remarks` varchar(2000) COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'æ‘˜è¦',
@@ -25,12 +25,12 @@ CREATE TABLE `classification_detail_pair` (
 
 ## Columns
 
-| Name | Type | Default | Nullable | Children | Parents | Comment |
-| ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | int(11) unsigned |  | false |  |  | ID |
-| debit_detail | int(11) unsigned |  | true |  | [classification_detail](classification_detail.md) | å€Ÿæ–¹æ˜Žç´°ã€‚è²¸æ–¹æ˜Žç´°ã¨åŒã˜ classification ã«å±žã™ã‚‹ã€‚ |
-| credit_detail | int(11) unsigned |  | true |  | [classification_detail](classification_detail.md) | è²¸æ–¹æ˜Žç´°ã€‚è²¸æ–¹æ˜Žç´°ã¨åŒã˜ classification ã«å±žã™ã‚‹ã€‚ |
-| remarks | varchar(2000) |  | true |  |  | æ‘˜è¦ |
+| Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
+| ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
+| id | int(11) unsigned |  | false | auto_increment |  |  | ID |
+| debit_detail | int(11) unsigned |  | true |  |  | [classification_detail](classification_detail.md) | å€Ÿæ–¹æ˜Žç´°ã€‚è²¸æ–¹æ˜Žç´°ã¨åŒã˜ classification ã«å±žã™ã‚‹ã€‚ |
+| credit_detail | int(11) unsigned |  | true |  |  | [classification_detail](classification_detail.md) | è²¸æ–¹æ˜Žç´°ã€‚è²¸æ–¹æ˜Žç´°ã¨åŒã˜ classification ã«å±žã™ã‚‹ã€‚ |
+| remarks | varchar(2000) |  | true |  |  |  | æ‘˜è¦ |
 
 ## Constraints
 

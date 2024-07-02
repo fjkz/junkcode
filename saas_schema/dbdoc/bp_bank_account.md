@@ -9,7 +9,7 @@
 
 ```sql
 CREATE TABLE `bp_bank_account` (
-  `id` int(11) unsigned NOT NULL COMMENT 'ID',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `owner` int(11) unsigned NOT NULL COMMENT 'å–å¼•å…ˆ',
   `name` varchar(255) COLLATE utf8mb4_bin NOT NULL COMMENT 'è¡¨ç¤ºå',
   `bank_code` char(4) COLLATE utf8mb4_bin NOT NULL COMMENT 'éŠ€è¡Œã‚³ãƒ¼ãƒ‰ã€‚éŠ€è¡Œã‚³ãƒ¼ãƒ‰ã®ãƒžã‚¹ã‚¿ãŒè¦ã‚‹ãŒçœç•¥ã™ã‚‹ã€‚',
@@ -26,15 +26,15 @@ CREATE TABLE `bp_bank_account` (
 
 ## Columns
 
-| Name | Type | Default | Nullable | Children | Parents | Comment |
-| ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | int(11) unsigned |  | false | [invoice_process](invoice_process.md) |  | ID |
-| owner | int(11) unsigned |  | false |  | [business_partner](business_partner.md) | å–å¼•å…ˆ |
-| name | varchar(255) |  | false |  |  | è¡¨ç¤ºå |
-| bank_code | char(4) |  | false |  |  | éŠ€è¡Œã‚³ãƒ¼ãƒ‰ã€‚éŠ€è¡Œã‚³ãƒ¼ãƒ‰ã®ãƒžã‚¹ã‚¿ãŒè¦ã‚‹ãŒçœç•¥ã™ã‚‹ã€‚ |
-| account_type | int(1) |  | false |  |  | å£åº§ç¨®åˆ¥ |
-| branch | char(5) |  | false |  |  | æ”¯åº—ç•ªå· |
-| account_number | char(8) |  | true |  |  | å£åº§ç•ªå· |
+| Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
+| ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
+| id | int(11) unsigned |  | false | auto_increment | [invoice_process](invoice_process.md) |  | ID |
+| owner | int(11) unsigned |  | false |  |  | [business_partner](business_partner.md) | å–å¼•å…ˆ |
+| name | varchar(255) |  | false |  |  |  | è¡¨ç¤ºå |
+| bank_code | char(4) |  | false |  |  |  | éŠ€è¡Œã‚³ãƒ¼ãƒ‰ã€‚éŠ€è¡Œã‚³ãƒ¼ãƒ‰ã®ãƒžã‚¹ã‚¿ãŒè¦ã‚‹ãŒçœç•¥ã™ã‚‹ã€‚ |
+| account_type | int(1) |  | false |  |  |  | å£åº§ç¨®åˆ¥ |
+| branch | char(5) |  | false |  |  |  | æ”¯åº—ç•ªå· |
+| account_number | char(8) |  | true |  |  |  | å£åº§ç•ªå· |
 
 ## Constraints
 

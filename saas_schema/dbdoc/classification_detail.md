@@ -9,7 +9,7 @@
 
 ```sql
 CREATE TABLE `classification_detail` (
-  `id` int(11) unsigned NOT NULL COMMENT 'ID',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `parent` int(11) unsigned NOT NULL COMMENT 'æ˜Žç´°ã®è¦ªã§ã‚ã‚‹ä»•è¨³',
   `date` date NOT NULL COMMENT 'è¨ˆä¸Šæ—¥',
   `amount` int(11) NOT NULL COMMENT 'é‡‘é¡. è«‹æ±‚ã‚’å‚µæ¨©ã¨ç›¸æ®ºã™ã‚‹ãªã©ãƒžã‚¤ãƒŠã‚¹ã¯ã‚ã‚Šã†ã‚‹ã®ã§ã€signed ã¨ã™ã‚‹ã€‚',
@@ -35,16 +35,16 @@ CREATE TABLE `classification_detail` (
 
 ## Columns
 
-| Name | Type | Default | Nullable | Children | Parents | Comment |
-| ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | int(11) unsigned |  | false | [classification_detail_pair](classification_detail_pair.md) |  | ID |
-| parent | int(11) unsigned |  | false |  | [classification](classification.md) | æ˜Žç´°ã®è¦ªã§ã‚ã‚‹ä»•è¨³ |
-| date | date |  | false |  |  | è¨ˆä¸Šæ—¥ |
-| amount | int(11) |  | false |  |  | é‡‘é¡. è«‹æ±‚ã‚’å‚µæ¨©ã¨ç›¸æ®ºã™ã‚‹ãªã©ãƒžã‚¤ãƒŠã‚¹ã¯ã‚ã‚Šã†ã‚‹ã®ã§ã€signed ã¨ã™ã‚‹ã€‚ |
-| category | int(11) unsigned |  | false |  | [account_category](account_category.md) | å‹˜å®šç§‘ç›®. ç§‘ç›®ã«å€Ÿæ–¹è²¸æ–¹ã‚’è¨­å®šã—ã¦ã„ã‚‹ã®ã§ã€ç§‘ç›®ã‹ã‚‰ã“ã®æ˜Žç´°ã®å€Ÿæ–¹è²¸æ–¹ãŒã‚ã‹ã‚‹ã€‚ |
-| subcategory | int(11) unsigned |  | true |  | [account_subcategory](account_subcategory.md) | è£œåŠ©ç§‘ç›® |
-| cost_center | int(11) unsigned |  | true |  | [cost_center](cost_center.md) | éƒ¨é–€ |
-| tax_class | int(11) unsigned |  | false |  | [tax_class](tax_class.md) | ç¨ŽåŒºåˆ† |
+| Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
+| ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
+| id | int(11) unsigned |  | false | auto_increment | [classification_detail_pair](classification_detail_pair.md) |  | ID |
+| parent | int(11) unsigned |  | false |  |  | [classification](classification.md) | æ˜Žç´°ã®è¦ªã§ã‚ã‚‹ä»•è¨³ |
+| date | date |  | false |  |  |  | è¨ˆä¸Šæ—¥ |
+| amount | int(11) |  | false |  |  |  | é‡‘é¡. è«‹æ±‚ã‚’å‚µæ¨©ã¨ç›¸æ®ºã™ã‚‹ãªã©ãƒžã‚¤ãƒŠã‚¹ã¯ã‚ã‚Šã†ã‚‹ã®ã§ã€signed ã¨ã™ã‚‹ã€‚ |
+| category | int(11) unsigned |  | false |  |  | [account_category](account_category.md) | å‹˜å®šç§‘ç›®. ç§‘ç›®ã«å€Ÿæ–¹è²¸æ–¹ã‚’è¨­å®šã—ã¦ã„ã‚‹ã®ã§ã€ç§‘ç›®ã‹ã‚‰ã“ã®æ˜Žç´°ã®å€Ÿæ–¹è²¸æ–¹ãŒã‚ã‹ã‚‹ã€‚ |
+| subcategory | int(11) unsigned |  | true |  |  | [account_subcategory](account_subcategory.md) | è£œåŠ©ç§‘ç›® |
+| cost_center | int(11) unsigned |  | true |  |  | [cost_center](cost_center.md) | éƒ¨é–€ |
+| tax_class | int(11) unsigned |  | false |  |  | [tax_class](tax_class.md) | ç¨ŽåŒºåˆ† |
 
 ## Constraints
 

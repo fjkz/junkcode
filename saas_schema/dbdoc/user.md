@@ -9,7 +9,7 @@
 
 ```sql
 CREATE TABLE `user` (
-  `id` int(11) unsigned NOT NULL COMMENT 'ID',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `tenant` int(11) unsigned NOT NULL COMMENT 'ãƒ†ãƒŠãƒ³ãƒˆã€‚ãƒ¦ãƒ¼ã‚¶ãƒ¼ã¯ï¼‘ã¤ã®ãƒ†ãƒŠãƒ³ãƒˆã«æ‰€å±žã—ã€ãƒ†ãƒŠãƒ³ãƒˆã®ä»˜ã‘æ›ãˆã‚‚ãªã„ã‚‚ã®ã¨ã™ã‚‹ã€‚',
   `name` varchar(255) COLLATE utf8mb4_bin NOT NULL COMMENT 'è¡¨ç¤ºå',
   PRIMARY KEY (`id`),
@@ -22,11 +22,11 @@ CREATE TABLE `user` (
 
 ## Columns
 
-| Name | Type | Default | Nullable | Children | Parents | Comment |
-| ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | int(11) unsigned |  | false | [invoice_process](invoice_process.md) |  | ID |
-| tenant | int(11) unsigned |  | false |  | [tenant](tenant.md) | ãƒ†ãƒŠãƒ³ãƒˆã€‚ãƒ¦ãƒ¼ã‚¶ãƒ¼ã¯ï¼‘ã¤ã®ãƒ†ãƒŠãƒ³ãƒˆã«æ‰€å±žã—ã€ãƒ†ãƒŠãƒ³ãƒˆã®ä»˜ã‘æ›ãˆã‚‚ãªã„ã‚‚ã®ã¨ã™ã‚‹ã€‚ |
-| name | varchar(255) |  | false |  |  | è¡¨ç¤ºå |
+| Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
+| ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
+| id | int(11) unsigned |  | false | auto_increment | [invoice_process](invoice_process.md) |  | ID |
+| tenant | int(11) unsigned |  | false |  |  | [tenant](tenant.md) | ãƒ†ãƒŠãƒ³ãƒˆã€‚ãƒ¦ãƒ¼ã‚¶ãƒ¼ã¯ï¼‘ã¤ã®ãƒ†ãƒŠãƒ³ãƒˆã«æ‰€å±žã—ã€ãƒ†ãƒŠãƒ³ãƒˆã®ä»˜ã‘æ›ãˆã‚‚ãªã„ã‚‚ã®ã¨ã™ã‚‹ã€‚ |
+| name | varchar(255) |  | false |  |  |  | è¡¨ç¤ºå |
 
 ## Constraints
 

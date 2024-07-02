@@ -9,7 +9,7 @@
 
 ```sql
 CREATE TABLE `classification` (
-  `id` int(11) unsigned NOT NULL COMMENT 'ID',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `remarks` varchar(2000) COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'è«‹æ±‚ãƒ¡ãƒ¢',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='ä»•è¨³. invoice_process ã«ã¾ã¨ã‚ã‚‹ã“ã¨ã‚‚è€ƒãˆãŸãŒã€invoice_process_detail ãŒå¿…è¦ã«ãªã£ãŸã®ã§å¯¾ç§°æ€§ã®ãŸã‚ã«ä»•è¨³ã¯åˆ‡ã‚Šå‡ºã—ãŸã€‚'
@@ -19,10 +19,10 @@ CREATE TABLE `classification` (
 
 ## Columns
 
-| Name | Type | Default | Nullable | Children | Parents | Comment |
-| ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | int(11) unsigned |  | false | [classification_detail](classification_detail.md) [invoice_process](invoice_process.md) |  | ID |
-| remarks | varchar(2000) |  | true |  |  | è«‹æ±‚ãƒ¡ãƒ¢ |
+| Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
+| ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
+| id | int(11) unsigned |  | false | auto_increment | [classification_detail](classification_detail.md) [invoice_process](invoice_process.md) |  | ID |
+| remarks | varchar(2000) |  | true |  |  |  | è«‹æ±‚ãƒ¡ãƒ¢ |
 
 ## Constraints
 

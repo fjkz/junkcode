@@ -9,7 +9,7 @@
 
 ```sql
 CREATE TABLE `account_subcategory` (
-  `id` int(11) unsigned NOT NULL COMMENT 'ID',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `name` varchar(255) COLLATE utf8mb4_bin NOT NULL COMMENT 'è¡¨ç¤ºå',
   `category` int(11) unsigned NOT NULL COMMENT 'è¦ªã®ç§‘ç›®',
   PRIMARY KEY (`id`),
@@ -22,11 +22,11 @@ CREATE TABLE `account_subcategory` (
 
 ## Columns
 
-| Name | Type | Default | Nullable | Children | Parents | Comment |
-| ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | int(11) unsigned |  | false | [classification_detail](classification_detail.md) |  | ID |
-| name | varchar(255) |  | false |  |  | è¡¨ç¤ºå |
-| category | int(11) unsigned |  | false |  | [account_category](account_category.md) | è¦ªã®ç§‘ç›® |
+| Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
+| ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
+| id | int(11) unsigned |  | false | auto_increment | [classification_detail](classification_detail.md) |  | ID |
+| name | varchar(255) |  | false |  |  |  | è¡¨ç¤ºå |
+| category | int(11) unsigned |  | false |  |  | [account_category](account_category.md) | è¦ªã®ç§‘ç›® |
 
 ## Constraints
 
