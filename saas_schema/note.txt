@@ -16,27 +16,7 @@ CREATE DATABASE mysaas DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
 
 # DROP TABLE 
 
-SET FOREIGN_KEY_CHECKS = 0;
-
-DROP TABLE
-account_category, 
-account_subcategory,
-bp_bank_account,
-business_partner,
-classification,
-classification_detail,
-classification_detail_pair,
-cost_center,
-invoice_file,
-invoice_process,
-payment_method_bank_transfer,
-payment_method_credit_card,
-payment_method_direct_debit,
-tax_class,
-tenant,
-user;
-
-SET FOREIGN_KEY_CHECKS = 1;
+ mysql -h $(hostname) -P 3306 -uroot -p${MYSQL_ROOT_PASSWORD} mysaas < drop_tables.sql
 
 # tbls
 
