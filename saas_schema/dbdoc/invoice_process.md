@@ -9,8 +9,9 @@
 
 ```sql
 CREATE TABLE `invoice_process` (
-  `id` int(11) unsigned NOT NULL COMMENT 'ID',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'IDã€‚(tenant, process_id) ã§è¤‡åˆä¸»ã‚­ãƒ¼ã«ã™ã‚‹ã¨ä»–ã®ãƒ†ãƒ¼ãƒ–ãƒ«ã¨JOINã™ã‚‹ã®ãŒé¢å€’ãªã®ã¨ã€å¾Œç¶šã®æ”¯æ‰•ã„å‡¦ç†ã§ä¸€æ„ãªè­˜åˆ¥å­ãŒãªã„ã¨ä¸ä¾¿ãã†ãªã®ã§ã‚µãƒ­ã‚²ãƒ¼ãƒˆã‚­ãƒ¼ã‚’ã¤ã‹ã†ã€‚',
   `tenant` int(11) unsigned NOT NULL COMMENT 'ãƒ†ãƒŠãƒ³ãƒˆ',
+  `process_id` int(11) unsigned NOT NULL COMMENT 'ãƒ†ãƒŠãƒ³ãƒˆå†…ã§ä½¿ã‚ã‚Œã‚‹è«‹æ±‚æ›¸å‡¦ç†ã®é€šç•ªã€‚ç”»é¢ã® No. ã«ä½¿ã†ã€‚',
   `state` int(2) NOT NULL COMMENT 'çŠ¶æ…‹ã€‚æœªå‡¦ç†ã€å‰Šé™¤æ¸ˆã€å‡¦ç†ä¸­ï¼ˆç´°ã‹ã„çŠ¶æ…‹ãŒã‚ã‚‹ã‹ã‚‚ï¼‰ã€å‡¦ç†æ¸ˆã¿ã¯å¿…è¦ã€‚',
   `amount` int(11) unsigned NOT NULL COMMENT 'é‡‘é¡ã€‚æ”¯æ‰•ã„ãŒãƒžã‚¤ãƒŠã‚¹ã«ã¯ãªã‚‰ãªã„ã®ã§ã€unsigned ã¨ã™ã‚‹ã€‚',
   `payee` int(11) unsigned NOT NULL COMMENT 'æ”¯æ‰•å…ˆå–å¼•å…ˆ',
@@ -21,7 +22,7 @@ CREATE TABLE `invoice_process` (
   `pic` int(11) unsigned NOT NULL COMMENT 'æ‹…å½“è€…',
   `classification` int(11) unsigned NOT NULL COMMENT 'ä»•è¨³',
   PRIMARY KEY (`id`),
-  KEY `tenant` (`tenant`),
+  UNIQUE KEY `tenant` (`tenant`,`process_id`),
   KEY `payee` (`payee`),
   KEY `payee_bank_account` (`payee_bank_account`),
   KEY `pic` (`pic`),
@@ -38,19 +39,20 @@ CREATE TABLE `invoice_process` (
 
 ## Columns
 
-| Name | Type | Default | Nullable | Children | Parents | Comment |
-| ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | int(11) unsigned |  | false | [invoice_file](invoice_file.md) |  | ID |
-| tenant | int(11) unsigned |  | false |  | [tenant](tenant.md) | ãƒ†ãƒŠãƒ³ãƒˆ |
-| state | int(2) |  | false |  |  | çŠ¶æ…‹ã€‚æœªå‡¦ç†ã€å‰Šé™¤æ¸ˆã€å‡¦ç†ä¸­ï¼ˆç´°ã‹ã„çŠ¶æ…‹ãŒã‚ã‚‹ã‹ã‚‚ï¼‰ã€å‡¦ç†æ¸ˆã¿ã¯å¿…è¦ã€‚ |
-| amount | int(11) unsigned |  | false |  |  | é‡‘é¡ã€‚æ”¯æ‰•ã„ãŒãƒžã‚¤ãƒŠã‚¹ã«ã¯ãªã‚‰ãªã„ã®ã§ã€unsigned ã¨ã™ã‚‹ã€‚ |
-| payee | int(11) unsigned |  | false |  | [business_partner](business_partner.md) | æ”¯æ‰•å…ˆå–å¼•å…ˆ |
-| payment_method_type | enum('bank_transfer','direct_debit','credit card') |  | false |  |  | æ”¯æ‰•ã„æ–¹æ³•ç¨®åˆ¥ |
-| payment_method_id | int(11) unsigned |  | false |  |  | æ”¯æ‰•ã„æ–¹æ³•ã€‚payment_method_type ãŒç¤ºã™ãƒ†ãƒ¼ãƒ–ãƒ«ã®IDã€‚å¤–éƒ¨ã‚­ãƒ¼åˆ¶ç´„ã¯ã¤ã‘ã‚‰ã‚Œãªã„ã€‚ |
-| payee_bank_account | int(11) unsigned |  | true |  | [bp_bank_account](bp_bank_account.md) | æŒ¯è¾¼å…ˆå£åº§. payment_method_type=bank_transfer ã®ã¨ãã®ã¿å€¤ãŒã‚ã‚‹ |
-| due | date |  | false |  |  | æ”¯æ‰•æœŸæ—¥ |
-| pic | int(11) unsigned |  | false |  | [user](user.md) | æ‹…å½“è€… |
-| classification | int(11) unsigned |  | false |  | [classification](classification.md) | ä»•è¨³ |
+| Name | Type | Default | Nullable | Extra Definition | Children | Parents | Comment |
+| ---- | ---- | ------- | -------- | ---------------- | -------- | ------- | ------- |
+| id | int(11) unsigned |  | false | auto_increment | [invoice_file](invoice_file.md) |  | IDã€‚(tenant, process_id) ã§è¤‡åˆä¸»ã‚­ãƒ¼ã«ã™ã‚‹ã¨ä»–ã®ãƒ†ãƒ¼ãƒ–ãƒ«ã¨JOINã™ã‚‹ã®ãŒé¢å€’ãªã®ã¨ã€å¾Œç¶šã®æ”¯æ‰•ã„å‡¦ç†ã§ä¸€æ„ãªè­˜åˆ¥å­ãŒãªã„ã¨ä¸ä¾¿ãã†ãªã®ã§ã‚µãƒ­ã‚²ãƒ¼ãƒˆã‚­ãƒ¼ã‚’ã¤ã‹ã†ã€‚ |
+| tenant | int(11) unsigned |  | false |  |  | [tenant](tenant.md) | ãƒ†ãƒŠãƒ³ãƒˆ |
+| process_id | int(11) unsigned |  | false |  |  |  | ãƒ†ãƒŠãƒ³ãƒˆå†…ã§ä½¿ã‚ã‚Œã‚‹è«‹æ±‚æ›¸å‡¦ç†ã®é€šç•ªã€‚ç”»é¢ã® No. ã«ä½¿ã†ã€‚ |
+| state | int(2) |  | false |  |  |  | çŠ¶æ…‹ã€‚æœªå‡¦ç†ã€å‰Šé™¤æ¸ˆã€å‡¦ç†ä¸­ï¼ˆç´°ã‹ã„çŠ¶æ…‹ãŒã‚ã‚‹ã‹ã‚‚ï¼‰ã€å‡¦ç†æ¸ˆã¿ã¯å¿…è¦ã€‚ |
+| amount | int(11) unsigned |  | false |  |  |  | é‡‘é¡ã€‚æ”¯æ‰•ã„ãŒãƒžã‚¤ãƒŠã‚¹ã«ã¯ãªã‚‰ãªã„ã®ã§ã€unsigned ã¨ã™ã‚‹ã€‚ |
+| payee | int(11) unsigned |  | false |  |  | [business_partner](business_partner.md) | æ”¯æ‰•å…ˆå–å¼•å…ˆ |
+| payment_method_type | enum('bank_transfer','direct_debit','credit card') |  | false |  |  |  | æ”¯æ‰•ã„æ–¹æ³•ç¨®åˆ¥ |
+| payment_method_id | int(11) unsigned |  | false |  |  |  | æ”¯æ‰•ã„æ–¹æ³•ã€‚payment_method_type ãŒç¤ºã™ãƒ†ãƒ¼ãƒ–ãƒ«ã®IDã€‚å¤–éƒ¨ã‚­ãƒ¼åˆ¶ç´„ã¯ã¤ã‘ã‚‰ã‚Œãªã„ã€‚ |
+| payee_bank_account | int(11) unsigned |  | true |  |  | [bp_bank_account](bp_bank_account.md) | æŒ¯è¾¼å…ˆå£åº§. payment_method_type=bank_transfer ã®ã¨ãã®ã¿å€¤ãŒã‚ã‚‹ |
+| due | date |  | false |  |  |  | æ”¯æ‰•æœŸæ—¥ |
+| pic | int(11) unsigned |  | false |  |  | [user](user.md) | æ‹…å½“è€… |
+| classification | int(11) unsigned |  | false |  |  | [classification](classification.md) | ä»•è¨³ |
 
 ## Constraints
 
@@ -62,6 +64,7 @@ CREATE TABLE `invoice_process` (
 | invoice_process_ibfk_4 | FOREIGN KEY | FOREIGN KEY (pic) REFERENCES user (id) |
 | invoice_process_ibfk_5 | FOREIGN KEY | FOREIGN KEY (classification) REFERENCES classification (id) |
 | PRIMARY | PRIMARY KEY | PRIMARY KEY (id) |
+| tenant | UNIQUE | UNIQUE KEY tenant (tenant, process_id) |
 
 ## Indexes
 
@@ -71,8 +74,8 @@ CREATE TABLE `invoice_process` (
 | payee | KEY payee (payee) USING BTREE |
 | payee_bank_account | KEY payee_bank_account (payee_bank_account) USING BTREE |
 | pic | KEY pic (pic) USING BTREE |
-| tenant | KEY tenant (tenant) USING BTREE |
 | PRIMARY | PRIMARY KEY (id) USING BTREE |
+| tenant | UNIQUE KEY tenant (tenant, process_id) USING BTREE |
 
 ## Relations
 

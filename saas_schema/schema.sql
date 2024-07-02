@@ -156,8 +156,9 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin
 COMMENT='仕訳明細ペア. 計上日が同じ借方と借方をペアにして摘要を加えるのは、画面特有の概念と思われるので別テーブルで表現する。';
 
 CREATE TABLE invoice_process (
-  id int(11) unsigned NOT NULL COMMENT 'ID',
+  id int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID。(tenant, process_id) で複合主キーにすると他のテーブルとJOINするのが面倒なのと、後続の支払い処理で一意な識別子がないと不便そうなのでサロゲートキーをつかう。',
   tenant int(11) unsigned NOT NULL COMMENT 'テナント',
+  process_id int(11) unsigned NOT NULL COMMENT 'テナント内で使われる請求書処理の通番。画面の No. に使う。',
   state int(2) NOT NULL COMMENT '状態。未処理、削除済、処理中（細かい状態があるかも）、処理済みは必要。',
   amount int(11) unsigned NOT NULL COMMENT '金額。支払いがマイナスにはならないので、unsigned とする。',
   payee int(11) unsigned NOT NULL COMMENT '支払先取引先',
@@ -168,6 +169,7 @@ CREATE TABLE invoice_process (
   pic int(11) unsigned NOT NULL COMMENT '担当者',
   classification int(11) unsigned NOT NULL COMMENT '仕訳',
   PRIMARY KEY (id),
+  UNIQUE KEY (tenant, process_id),
   FOREIGN KEY (tenant) REFERENCES tenant (id),
   FOREIGN KEY (payee) REFERENCES business_partner (id),
   FOREIGN KEY (payee_bank_account) REFERENCES bp_bank_account (id),
