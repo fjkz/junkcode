@@ -151,7 +151,7 @@ def snipe(page, target, retry_sec):
 
 
 with sync_playwright() as p:
-    browser = p.chromium.launch(headless=True)
+    browser = p.chromium.launch(headless=False)
     page = browser.new_page()
     page.set_default_timeout(60000)
     login(page)
