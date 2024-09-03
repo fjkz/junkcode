@@ -10,11 +10,6 @@ from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
 
 TRIAL_MODE = True
-if not TRIAL_MODE:
-    print("****************************************")
-    print(" CAUTION: Not Trial Mode")
-    print("****************************************")
-    time.sleep(5)
 
 logging.basicConfig(
     stream=sys.stdout,
@@ -22,6 +17,15 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s %(message)s",
 )
 log = logging.getLogger(__name__)
+
+if TRIAL_MODE:
+    log.info("trial mode start")
+else:
+    print("****************************************")
+    print(" CAUTION: Not Trial Mode")
+    print("****************************************")
+    time.sleep(5)
+    log.info("real mode start")
 
 # load config
 file_path = os.path.join(os.path.dirname(sys.argv[0]), "config.yml")
