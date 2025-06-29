@@ -1,5 +1,5 @@
 import string
-from copy import deepcopy, copy
+from copy import copy
 from heapq import heappush, heappop
 import random
 import time
@@ -40,7 +40,7 @@ piece_shape = {
           [  _, "@"]],
     "Z": [["@", "@"],
           [  _, "@"],
-          [  _, "@", "@"]]
+          [  _, "@", "@"]],
 }
 
 
@@ -49,23 +49,28 @@ class MinoPosition:
         self.minos = minos
 
     def turn_flip(self, factor):
+        """
+        Transforms the piece's mino coordinates.
+        factor 0-3: rotations
+        factor 4-7: flipped then rotations
+        """
         new_position = []
         for y, x in self.minos:
-            if factor == 0:
+            if factor == 0: # 0 deg
                 ny, nx = y, x
-            elif factor == 1:
+            elif factor == 1: # 90 deg
                 ny, nx = x, -y
-            elif factor == 2:
+            elif factor == 2: # 180 deg
                 ny, nx = -y, -x
-            elif factor == 3:
+            elif factor == 3: # 270 deg
                 ny, nx = -x, y
-            elif factor == 4:
+            elif factor == 4: # flipped + 0 deg
                 ny, nx = y, -x
-            elif factor == 5:
+            elif factor == 5: # flipped + 90 deg
                 ny, nx = -x, -y
-            elif factor == 6:
+            elif factor == 6: # flipped + 180 deg
                 ny, nx = -y, x
-            elif factor == 7:
+            elif factor == 7: # flipped + 270 deg
                 ny, nx = x, y
             new_position.append((ny, nx))
         new_position.sort()
@@ -103,6 +108,12 @@ class Board:
         for y, x in position:
             self.cells[y][x] = k
         self.put_history.append(k)
+
+    def remove(self, position: MinoPosition):
+        """Removes a piece from the board, undoing a `put` operation."""
+        for y, x in position:
+            self.cells[y][x] = None
+        self.put_history.pop()
 
     def print(self):
         for row in self.cells:
@@ -192,18 +203,16 @@ class Piece:
                     yield position
 
 
-pieces = [Piece(s) for s in piece_labels]
-
-
 class NoAnswer(Exception):
     pass
 
 
 class FitStatistics:
     def __init__(self, pieces: List[Piece]):
+        self.pieces = pieces
         # start from 1 to avoid zero-division error
-        self.trial = {p: 1 for p in pieces}
-        self.fit = {p: 1 for p in pieces}
+        self.trial = {p: 1 for p in self.pieces}
+        self.fit = {p: 1 for p in self.pieces}
 
     def countup_trial(self, piece: Piece):
         self.trial[piece] += 1
@@ -215,7 +224,7 @@ class FitStatistics:
         return self.fit[piece] / self.trial[piece]
 
     def list_fit_rate(self):
-        rate_list = [(p, self.fit_rate(p)) for p in pieces]
+        rate_list = [(p, self.fit_rate(p)) for p in self.pieces]
         rate_list.sort(key=lambda t: t[1])
         return rate_list
 
@@ -224,62 +233,63 @@ class FitStatistics:
 
 
 class SearchStatistics:
-    def __init__(self):
-        self.reached_depth_count = {i: 0 for i in range(1, len(pieces))}
+    def __init__(self, pieces: List[Piece]):
+        self.reached_depth_count = {i: 0 for i in range(1, len(pieces) + 1)}
 
     def countup(self, reached_depth: int):
-        self.reached_depth_count[reached_depth] += 1
+        if reached_depth > 0:
+            self.reached_depth_count[reached_depth] += 1
 
     def total_trial(self):
         return sum(self.reached_depth_count.values())
 
     def mean_reached_depth(self):
         dc = self.reached_depth_count
-        return sum(d * c for d, c in dc.items()) / sum(dc.values())
+        total_trials = self.total_trial()
+        if not total_trials:
+            return 0
+        return sum(d * c for d, c in dc.items()) / total_trials
 
     def reach_distribution(self):
+        total_trials = self.total_trial()
+        if not total_trials:
+            return []
         reachd = [
-            (d, c / self.total_trial()) for d, c in self.reached_depth_count.items()
+            (d, c / total_trials) for d, c in self.reached_depth_count.items()
         ]
         reachd.sort()
         return reachd
 
 
-fit_statistics = FitStatistics(pieces)
-search_statistics = SearchStatistics()
-
 # Strategies of piece choice for the next fit trial
-
-
 class FitDifficultPieceChoice:
     """A: Try from fit-diffucult piece"""
+    def __init__(self, fit_statistics: FitStatistics):
+        self.fit_statistics = fit_statistics
 
     def pop(self, pieces):
-        global fit_statistics
-        pieces.sort(key=fit_statistics.fit_rate, reverse=True)
+        pieces.sort(key=self.fit_statistics.fit_rate, reverse=True)
         return pieces.pop()
 
 
 class FitEasyPieceChoice:
     """B: Try from fit-easy piece"""
+    def __init__(self, fit_statistics: FitStatistics):
+        self.fit_statistics = fit_statistics
 
     def pop(self, pieces):
-        global fit_statistics
-        pieces.sort(key=fit_statistics.fit_rate, reverse=False)
+        pieces.sort(key=self.fit_statistics.fit_rate, reverse=False)
         return pieces.pop()
 
 
 class RandomPieceChoice:
     """C: Try randomly"""
+    def __init__(self, fit_statistics: FitStatistics):
+        pass
 
     def pop(self, pieces):
         random.shuffle(pieces)
         return pieces.pop()
-
-
-piece_choice_strategy = FitDifficultPieceChoice()
-# piece_choice_strategy = FitEasyPieceChoice()
-# piece_choice_strategy = RandomPieceChoice()
 
 
 def prioritize(open_edges, y, x, yspan, xspan):
@@ -301,81 +311,96 @@ def prioritize(open_edges, y, x, yspan, xspan):
     # return (open_edges, min(y, yspan - y, x, xspan - x), ran)
 
 
-def backtrack(cell_queue, remaining_pieces, board: Board):
-    global search_trial
+class Solver:
+    """
+    Encapsulates the pentomino puzzle solving logic.
+    """
+    def __init__(self, board: Board, pieces: List[Piece], strategy_class):
+        self.board = board
+        self.pieces = pieces
+        self.fit_statistics = FitStatistics(self.pieces)
+        self.search_statistics = SearchStatistics(self.pieces)
+        self.piece_choice_strategy = strategy_class(self.fit_statistics)
 
-    while cell_queue:
-        _, y, x = heappop(cell_queue)
+    def solve(self):
+        """
+        Starts the backtracking solver.
+        Returns the solved board or raises NoAnswer if no solution is found.
+        """
+        # (priority, y, x)
+        cell_queue = [(0, 0, 0)]
+        return self._backtrack(cell_queue, self.pieces)
 
-        # find the next empty cell
-        if not board.is_empty_at(y, x):
-            continue
+    def _backtrack(self, cell_queue, remaining_pieces):
+        while cell_queue:
+            _, y, x = heappop(cell_queue)
 
-        pieces_not_tried = copy(remaining_pieces)
+            if not self.board.is_empty_at(y, x):
+                continue
 
-        # try all pieces and positions
-        while pieces_not_tried:
+            pieces_not_tried = copy(remaining_pieces)
 
-            piece = piece_choice_strategy.pop(pieces_not_tried)
-            fit_statistics.countup_trial(piece)
+            while pieces_not_tried:
+                piece = self.piece_choice_strategy.pop(pieces_not_tried)
+                self.fit_statistics.countup_trial(piece)
 
-            for piece_position in piece.possible_positions(y, x, board):
+                for piece_position in piece.possible_positions(y, x, self.board):
+                    self.fit_statistics.countup_fit(piece)
 
-                # get fit-difficulty statistics
-                fit_statistics.countup_fit(piece)
+                    self.board.put(piece_position, piece.label)
+                    remaining_pieces2 = copy(remaining_pieces)
+                    remaining_pieces2.remove(piece)
 
-                board2 = deepcopy(board)
-                board2.put(piece_position, piece.label)
+                    if not remaining_pieces2:
+                        return self.board # Solved
 
-                remaining_pieces2 = copy(remaining_pieces)
-                remaining_pieces2.remove(piece)
+                    cell_queue2 = copy(cell_queue)
+                    four = ((-1, 0), (1, 0), (0, -1), (0, 1))
 
-                cell_queue2 = copy(cell_queue)
-                four = ((-1, 0), (1, 0), (0, -1), (0, 1))
-
-                # find neighbor cells beside the piece
-                neighbors = {
-                    (y1 + y2, x1 + x2)
-                    for y1, x1 in four
-                    for y2, x2 in piece_position
-                    if board2.is_empty_at(y1 + y2, x1 + x2)
-                }
-
-                for nby, nbx in neighbors:
-                    parameters = {
-                        "open_edges": sum(
-                            board2.is_empty_at(nby + y1, nbx + x1) for y1, x1 in four
-                        ),
-                        "y": y,
-                        "x": x,
-                        "yspan": board2.span()[0],
-                        "xspan": board2.span()[1],
+                    neighbors = {
+                        (y1 + y2, x1 + x2)
+                        for y1, x1 in four
+                        for y2, x2 in piece_position
+                        if self.board.is_empty_at(y1 + y2, x1 + x2)
                     }
-                    priority = prioritize(**parameters)
-                    heappush(cell_queue2, (priority, nby, nbx))
 
-                try:
-                    return backtrack(cell_queue2, remaining_pieces2, board2)
-                except NoAnswer:
-                    continue
+                    for nby, nbx in neighbors:
+                        parameters = {
+                            "open_edges": sum(
+                                self.board.is_empty_at(nby + y1, nbx + x1) for y1, x1 in four
+                            ),
+                            "y": y,
+                            "x": x,
+                            "yspan": self.board.span()[0],
+                            "xspan": self.board.span()[1],
+                        }
+                        priority = prioritize(**parameters)
+                        heappush(cell_queue2, (priority, nby, nbx))
 
-        search_statistics.countup(len(board.put_history))
-        board.cells[y][x] = "+"
+                    try:
+                        return self._backtrack(cell_queue2, remaining_pieces2)
+                    except NoAnswer:
+                        self.board.remove(piece_position)
+                        continue
 
-        # print progress
-        if search_statistics.total_trial() % 1000 == 0:
-            print(
-                "#search trial:",
-                search_statistics.total_trial(),
-                ":",
-                "".join(board.put_history),
-            )
-            board.print()
-            print()
+            self.search_statistics.countup(len(self.board.put_history))
+            self.board.cells[y][x] = "+" # Mark as tried and failed
 
-        raise NoAnswer()
+            if self.search_statistics.total_trial() % 1000 == 0:
+                print(
+                    "#search trial:",
+                    self.search_statistics.total_trial(),
+                    ":",
+                    "".join(self.board.put_history),
+                )
+                self.board.print()
+                print()
+            
+            self.board.cells[y][x] = None # Unmark
 
-    return board
+            raise NoAnswer()
+
+        return self.board
 
 
 YSPAN = 6
@@ -383,33 +408,51 @@ XSPAN = 10
 
 if __name__ == "__main__":
     board = Board(YSPAN, XSPAN)
+    pieces = [Piece(s) for s in piece_labels]
+    random.shuffle(pieces)
+
     # for y, x in [(3,3), (3,4), (4,3), (4,4)]:
     #    board.cells[y][x] = "#"
+    
+    print("Initial board:")
     board.print()
-    random.shuffle(pieces)
+    print()
+
+    # Choose a strategy
+    strategy = FitDifficultPieceChoice
+    # strategy = FitEasyPieceChoice
+    # strategy = RandomPieceChoice
+
+    solver = Solver(board, pieces, strategy)
 
     start_time_ns = time.time_ns()
 
-    cell_queue = [(0, 0, 0)]  # (open edge, y, x)
-    answer = backtrack(cell_queue, pieces, board)
+    try:
+        answer_board = solver.solve()
+        end_time_ns = time.time_ns()
 
-    end_time_ns = time.time_ns()
+        print("#fit rate")
+        for piece, rate in solver.fit_statistics.list_fit_rate():
+            print(f"{piece}: {rate:.3f}")
 
-    print("#fit rate")
-    for piece, rate in fit_statistics.list_fit_rate():
-        print(f"{piece}: {rate:.3f}")
+        print("#reach distribution")
+        for depth, rate in solver.search_statistics.reach_distribution():
+            print(f"{depth:2d}: {rate:.4f}")
 
-    print("\n#reach distribution")
-    for depth, rate in search_statistics.reach_distribution():
-        print(f"{depth:2d}: {rate:.4f}")
+        print()
+        elapsed = (end_time_ns - start_time_ns) / 10**9
+        print(f"elapsed time [s]: {elapsed:.2f}")
+        print("total search trial:", solver.search_statistics.total_trial())
+        fit_rate = solver.fit_statistics.mean_fit_rate()
+        print(f"mean fit rate: {fit_rate:.2f}")
+        depth = solver.search_statistics.mean_reached_depth()
+        print(f"mean reached depth: {depth:.2f}")
+        print()
+        print("Solution:")
+        answer_board.print()
 
-    print()
-    elapsed = (end_time_ns - start_time_ns) / 10**9
-    print(f"elapsed time [s]: {elapsed:.2f}")
-    print("total search trial:", search_statistics.total_trial())
-    fit_rate = fit_statistics.mean_fit_rate()
-    print(f"mean fit rate: {fit_rate:.2f}")
-    depth = search_statistics.mean_reached_depth()
-    print(f"mean reached depth: {depth:.2f}")
-    print()
-    answer.print()
+    except NoAnswer:
+        end_time_ns = time.time_ns()
+        print("No solution found.")
+        elapsed = (end_time_ns - start_time_ns) / 10**9
+        print(f"elapsed time [s]: {elapsed:.2f}")
